@@ -2,7 +2,6 @@
 import os
 import sys
 import cv2
-from utils import *
 import matplotlib.image as mpimg
 import matplotlib.pyplot as plt
 from PIL import Image
@@ -11,10 +10,14 @@ import src.CameraCalibration as cc
 import src.Filters as F
 import src.FindingLane as FLane
 
+import numpy as np
+
+np.seterr(divide='ignore',invalid='ignore')
+
 
 if __name__ == "__main__":
 	calibration = cc.Calibration('./camera_cal', 'jpg', 9, 6)
-	calibration.cameraCalibration(_drawCorner = True)
+	calibration.cameraCalibration(_drawCorner = False)
 	
 	# calibration.undistort_list(calibration.getDataList())
 	test_img_list = glob.glob('./test_images/*.jpg')
@@ -28,21 +31,15 @@ if __name__ == "__main__":
 		und.imshow(img)
 		und = fig_und.add_subplot(4, 4, 2 * i + 2)
 		und.imshow(und_img)
-	# plt.show()
+	plt.show()
 
-	# src_p = np.float32([[535, 490], [770, 490], [1090, 660], [290, 660]])
 	src_p = np.float32([[535, 490], [770, 490], [1100, 719], [190, 719]])
 	dst_p = np.float32([[320, 0], [1000, 0], [1000, 720 - 1], [320, 720 - 1]])
 	M = cv2.getPerspectiveTransform(src_p, dst_p)
-	# print (test_img_list[4])
-	# img = cv2.cvtColor(cv2.imread(test_img_list[6]), cv2.COLOR_BGR2RGB)
-	# und_img = calibration.undistort(img)
-	# warped = cv2.warpPerspective(und_img, M, (img.shape[1], img.shape[0]))
-	# plt.imshow(warped)
-	# f = plt.show()
 
 	fig_und = plt.figure(figsize=(24, 9))
 	fig_und.suptitle('undistort image (left) & warp result (right)', fontsize=20)
+
 	for i, _filename in enumerate(test_img_list) :
 		img = cv2.cvtColor(cv2.imread(_filename), cv2.COLOR_BGR2RGB)
 		und_img = calibration.undistort(img)
@@ -51,7 +48,6 @@ if __name__ == "__main__":
 		und.imshow(und_img)
 		und = fig_und.add_subplot(4, 4, 2 * i + 2)
 		und.imshow(warped)
-	# f = plt.show()
 
 
 
@@ -96,10 +92,13 @@ if __name__ == "__main__":
 		und.imshow(colorFilter, cmap='gray')
 		und = fig_und.add_subplot(8, 7, 7 * i + 7)
 		und.imshow(combine, cmap='gray')
+
 		finder = FLane.Lane()
-		finder.processing(combine, warped,_visualization = True)
+		finder.processing(combine, warped, _visualization = True)
 		plt.imshow(finder.out_img)
 		plt.show()
+		
+
 		finder.processing(combine, warped, _visualization = True)
 		plt.imshow(finder.result)
 		plt.show()	
@@ -122,8 +121,7 @@ if __name__ == "__main__":
 		processed_img[(inv_sign_img == 255)] = inv_warped[(inv_sign_img == 255)]
 		plt.imshow(processed_img)
 		plt.show()
-	# f = plt.show()
-
+		assert(0)
 	
 	
 

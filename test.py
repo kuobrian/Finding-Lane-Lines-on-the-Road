@@ -1,51 +1,47 @@
-import cv2
-import glob
-import matplotlib
+# -*- coding: utf-8 -*-
+
+__author__ = 'user'
+
+import numpy
+
+import numpy as np                                                           
+
 import matplotlib.pyplot as plt
 
-import src.CameraCalibration as cc
-import src.Filters as F
+import warnings
 
-def CCalibration(img) :
-    calibration = cc.Calibration('./camera_cal', 'jpg', 9, 6)
-    # print (calibration.getDataList())
-    # _list = calibration.getDataList()
-    # calibration.findCorner(_drawCorner = True)
-    # calibration.findCorner()
-    calibration.cameraCalibration()
-    # calibration.cameraCalibration(_drawCorner = True)
-    # calibration.undistort_list(_list)
-    return calibration.undistort(img)
+warnings.simplefilter('ignore', np.RankWarning)  # 可排除錯誤的訊息
 
-def Cfilter() :
-    img_list = glob.glob('./colorspace_test_images/*.jpg')
-    img = cv2.imread(img_list[1])
-    colorF = F.colorFilter()
-    img = colorF.getColorFilter(img, (100, 255))
-    plt.imshow(img, cmap = 'gray')
-    plt.show()
+x = np.array([0.0, 1.0, 2.0, 3.0,  4.0,  5.0,6.0,7.0,8.0,9.0,10.0])
 
-def Gfilter() :
-    img_list = glob.glob('./colorspace_test_images/*.jpg')
-    img = cv2.imread(img_list[1])
-    gradF = F.gradFilters(_sobel_x_thresh=(20, 100), 
-                            _sobel_y_thresh=(20, 100), 
-                            _mag_thresh=(20, 100), 
-                            _dir_thresh=(0.7, 1.3))
+y = np.array([0.0, 0.8, 0.9, 0.1, -0.8, -1.0,-0.8,-0.7,-0.2,0.2,0.6])
 
-    _, _ = gradF.compute_mag_grad(img, 3)
-    _, _ = gradF.compute_dir(img, 15)
+a3 = np.polyfit(x, y, 3) ## 3階乘，即x最高次方係数是3
 
-    xFilter = gradF.getXgradFilter()
-    yFilter = gradF.getYgradFilter()
-    magFilter = gradF.getMagFilter()
-    dirFilter = gradF.getDirFilter()
+print "a3", a3                #印出3階乘的各個係數
 
-    
+a10 = np.polyfit(x, y, 10) ## 10階乘，即x最高次方係数是10
 
-if "__main__" :
-    # CCalibration()
-    # Cfilter()
-    test_img_list = glob.glob('./test_images/*.jpg')
-    plt.imshow(CCalibration(cv2.cvtColor(cv2.imread(test_img_list[0]), cv2.COLOR_BGR2RGB)))
-    plt.show()
+print "a10", a10
+
+p3 = np.poly1d(a3)      #產生出線性方程式
+
+print "p3",p3                #印出3階乘的各值
+
+p10 = np.poly1d(a10)
+
+xp=np.linspace(0,10,20)
+
+
+for i in range(len(xp)):
+
+  print "xp=%.6f,Y=%.6f" % (xp[i],p3(xp)[i])
+
+#warnings.simplefilter('ignore', np.RankWarning)
+
+plt.plot(x, y, ".", markersize = 10) # 點為原始數據
+
+plt.plot(xp, p3(xp), "r--") # 紅線是a3的3階乘
+
+plt.plot(xp, p10(xp), "b--") # 藍線是a10的10階乘
+plt.show()

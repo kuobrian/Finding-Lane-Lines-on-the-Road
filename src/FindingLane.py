@@ -20,7 +20,7 @@ class Lane :
         self.ploty = None
 
         # Define conversions in x and y from pixels space to meters
-        self.ym_per_pix = 30/720 # meters per pixel in y dimension
+        self.ym_per_pix = 30.0/720.0 # meters per pixel in y dimension
         self.xm_per_pix = 3.7/700 # meters per pixel in x dimension
 
         self.out_img = []
@@ -271,6 +271,8 @@ class Lane :
         Calculates the curvature of polynomial functions in meters.
         '''
         ploty = np.linspace(0, _img_b.shape[0]-1, _img_b.shape[0])
+        # print("=============== ", ploty , self.ym_per_pix, _left_fitx , self.xm_per_pix)
+        # assert(0)
         left_fit_cr = np.polyfit(ploty * self.ym_per_pix, _left_fitx * self.xm_per_pix, 2)
         right_fit_cr = np.polyfit(ploty * self.ym_per_pix, _right_fitx * self.xm_per_pix, 2)
 
@@ -286,9 +288,10 @@ class Lane :
         return left_curverad, right_curverad
 
     def processing(self, _img_b, _draw_img, _visualization = False) :
-        if (self.detected) :
+        if self.detected :
             left_fitx, right_fitx, left_fit, right_fit = self.search_around_poly(_img_b, _draw_img, self.current_fit_left, self.current_fit_right
                                 , _visualization = _visualization)
+
             left_curverad, right_curverad = self.measure_curvature_real(_img_b, left_fitx, right_fitx)
             
             self.recent_xfitted_left.append(left_fitx)
