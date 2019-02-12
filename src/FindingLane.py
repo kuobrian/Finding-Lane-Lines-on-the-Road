@@ -157,14 +157,14 @@ class Lane :
             right_fitx = 1*ploty**2 + 1*ploty
 
         ## Visualization ##
-        # if (_visualization) :
-        #     # Colors in the left and right lane regions
-        #     self.out_img[_lefty, _leftx] = [255, 0, 0]
-        #     self.out_img[_righty, _rightx] = [0, 0, 255]
+        if (_visualization) :
+            # Colors in the left and right lane regions
+            self.out_img[_lefty, _leftx] = [255, 0, 0]
+            self.out_img[_righty, _rightx] = [0, 0, 255]
 
-        #     # Plots the left and right polynomials on the lane lines
-        #     plt.plot(left_fitx, ploty, color='yellow')
-        #     plt.plot(right_fitx, ploty, color='yellow')
+            # Plots the left and right polynomials on the lane lines
+            plt.plot(left_fitx, ploty, color='yellow')
+            plt.plot(right_fitx, ploty, color='yellow')
         
         return left_fitx, right_fitx, left_fit, right_fit
 

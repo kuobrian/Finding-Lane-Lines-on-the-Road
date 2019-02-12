@@ -4,11 +4,12 @@ import numpy as np
 Half_PI = np.pi / 2
 
 class gradFilters :
-    def __init__(self, _sobel_x_thresh = (0, 255), 
-                       _sobel_y_thresh = (0, 255), 
-                       _mag_thresh = (0, 255), 
-                       _dir_thresh = (0, Half_PI)
-                       ) :
+    def __init__ (self, 
+            _sobel_x_thresh = (0, 255), 
+            _sobel_y_thresh = (0, 255), 
+            _mag_thresh = (0, 255), 
+            _dir_thresh = (0, Half_PI)):
+
         self.sobel_x_thresh = _sobel_x_thresh
         self.sobel_y_thresh = _sobel_y_thresh
         self.mag_thresh = _mag_thresh
@@ -28,7 +29,7 @@ class gradFilters :
         self.mag_filter = None
         self.dir_filter = None
 
-    def compute_x_grad(self, _img, _kernel) :
+    def compute_x_grad(self, _img, _kernel):
         if (len(_img.shape) == 3) :
             _img = cv2.cvtColor(_img, cv2.COLOR_BGR2GRAY)
         x_grad = cv2.Sobel(_img, cv2.CV_64F, 1, 0, ksize=_kernel)
@@ -112,8 +113,8 @@ class colorFilter :
     def __init__(self, _color_space = 'HLS', _s_thresh = (0, 255)) :
         if (_color_space == 'HLS') :
             self.color_space = cv2.COLOR_BGR2HLS
+        
         self.s_thresh = _s_thresh
-
         self.converted = False
         self.converted_img = None
         self.color_filter = None
@@ -127,3 +128,5 @@ class colorFilter :
         self.color_filter[(self.converted_img[:, :, 2] > self.s_thresh[0]) &  
                             (self.converted_img[:, :, 2] <= self.s_thresh[1])] = 1
         return self.color_filter
+
+
