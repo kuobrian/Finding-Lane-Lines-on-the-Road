@@ -6,21 +6,13 @@ import matplotlib.image as mpimg
 import matplotlib.pyplot as plt
 from PIL import Image
 import glob
-import src.CameraCalibration as cc
-import src.Filters as F
-import src.FindingLane as FLane
 from time import sleep
 from threading import Thread
 import numpy as np
 from moviepy.editor import VideoFileClip
 
-Lfinder = FLane.Lane()
-# Lfinder = Lane()
-# cover = np.zeros_like(xFilter)
-# cover[:, 130:1200] = 1
 
 def processing_image(image) :
-	print(type(image))
 	src_p = np.float32([[92, 1532], [1926, 1532], [776, 918], [1314, 918]])
 	dst_p = np.float32([[92, 1532], [1926, 1532], [92, 746], [1926, 746]])
 	# src_p = np.float32([[272, 1479], [1828, 1478], [660, 1100], [1455, 1100]])
@@ -83,7 +75,7 @@ def processing_image(image) :
 
 output_dir = 'output_images/video4.mp4'
 
-print(os.path.isfile('./data/video/video.avi') )
+print(os.path.isfile('./data/video/video.mp4') )
 
 clip1 = VideoFileClip('./data/video/video.avi').subclip(0,10)
 

@@ -23,7 +23,9 @@ def convert_frames_to_video(pathIn, pathOut, fps):
 				size = (w,h)
 				frame_array.append(img)
 				count += 1
-	out = cv2.VideoWriter(pathOut, cv2.VideoWriter_fourcc(*'DIVX'), fps, size)
+
+    fourcc = cv2.VideoWriter_fourcc('M', 'P', '4', 'V') 
+	out = cv2.VideoWriter(pathOut, fourcc, fps, size)
 
 	for i in range(len(frame_array)):
 		out.write(frame_array[i])
